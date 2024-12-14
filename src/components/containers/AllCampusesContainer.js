@@ -26,6 +26,8 @@ class AllCampusesContainer extends Component {
         <Header />
         <AllCampusesView
           allCampuses={this.props.allCampuses}
+          deleteCampus={this.props.deleteCampus}
+
         />
       </div>
     );
@@ -38,6 +40,8 @@ class AllCampusesContainer extends Component {
 const mapState = (state) => {
   return {
     allCampuses: state.allCampuses,  // Get the State object from Reducer "allCampuses"
+    deleteCampus: (campusId) => dispatch(deleteCampusThunk(campusId)),
+
   };
 };  
 // 2. The "mapDispatch" argument is used to dispatch Action (Redux Thunk) to Redux Store.
@@ -45,9 +49,9 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     fetchAllCampuses: () => dispatch(fetchAllCampusesThunk()),
+    deleteCampus: (campusId) => dispatch(deleteCampusThunk(campusId)),
   };
 };
-
 // Type check props;
 AllCampusesContainer.propTypes = {
   allCampuses: PropTypes.array.isRequired,
