@@ -44,8 +44,8 @@ const CampusView = (props) => {
       </Link>
 
       {/* Delete Campus button */}
-      <button onClick={handleDelete}>Delete Campus</button>
-    </div>
+      <button onClick={() => deleteCampus(campus.id)}>Delete Campus</button>
+      </div>
   );
 };
 

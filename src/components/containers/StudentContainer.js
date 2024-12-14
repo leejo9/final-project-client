@@ -8,7 +8,7 @@ If needed, it also defines the component's "connect" function.
 import Header from './Header';
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchStudentThunk } from "../../store/thunks";
+import { fetchStudentThunk, deleteStudentThunk, editStudentThunk } from "../../store/thunks";
 import { StudentView } from "../views";
 
 class StudentContainer extends Component {
@@ -17,13 +17,19 @@ class StudentContainer extends Component {
     //getting student ID from url
     this.props.fetchStudent(this.props.match.params.id);
   }
-
+  handleDeleteStudent = () => {
+    const { student, deleteStudent } = this.props;
+    if (student && student.id) {
+      deleteStudent(student.id);  // Ensure campus.id is passed correctly here
+      this.props.history.push('/students');  // Redirect after deletion
+    }
+  };
   // Render Student view by passing student data as props to the corresponding View component
   render() {
     return (
       <div>
         <Header />
-        <StudentView student={this.props.student} deleteStudent={this.props.deleteStudent} editStudent = {this.props.editStudent}/>
+        <StudentView student={this.props.student} deleteStudent={this.handleDeleteStudent} editStudent = {this.props.editStudent}/>
       </div>
     );
   }
