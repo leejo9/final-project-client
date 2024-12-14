@@ -45,12 +45,12 @@ const NewStudentView = (props) => {
   const { handleSubmit, studData, campuses } = props; // campuses passed as prop
 
   const [studentData, setStudentData] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    imageUrl: '',
-    gpa: '',
-    campusId: '',
+    firstname: studData?.firstname || '',
+    lastname: studData?.lastname || '',
+    email: studData?.email || '',
+    imageUrl: studData?.imageUrl || '',
+    gpa: studData?.gpa || '',
+    campusId: studData?.campusId || '',
   });
 
   const [errors, setErrors] = useState({
@@ -61,7 +61,8 @@ const NewStudentView = (props) => {
     gpa: '',
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+   const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   // Validation function
   const validate = () => {
