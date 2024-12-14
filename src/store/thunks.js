@@ -100,3 +100,37 @@ export const fetchStudentThunk = id => async dispatch => {  // The THUNK
     console.error(err);
   }
 };
+
+export const addCampusThunk = (campus) => async (dispatch) => {  // The THUNK
+  try {
+    const response = await fetch('/api/campuses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(campus),
+    });
+    const newCampus = await response.json();
+    dispatch({
+      type: 'ADD_CAMPUS',
+      campus: newCampus,
+    });
+    return newCampus;
+  } catch (error) {
+    console.error('Error adding campus:', error);
+  }
+};
+
+export const deleteCampusThunk = (campusId) => async (dispatch) => {  // The THUNK
+  try {
+    if (!campusId) {
+      console.error("Invalid campusId:", campusId); 
+      return;
+    }
+    
+    await axios.delete(`/api/campuses/${campusId}`);
+    dispatch(ac.deleteCampus(campusId));
+  } catch (err) {
+    console.error("Error deleting campus:", err);
+  }
+};
