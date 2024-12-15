@@ -110,7 +110,6 @@ const NewStudentView = (props) => {
         // Optionally reset form or navigate after submission
       } catch (error) {
         console.error('Error submitting form:', error.response?.data || error.message);
-        alert('Error adding/updating student: ' + (error.response?.data.message || error.message));
       } finally {
         setIsSubmitting(false);
       }
