@@ -50,7 +50,7 @@ handleSubmit = async (event) => {
     lastname,
     email,
     imageUrl: imageUrl || "https://example.com/profile.jpg", // Use default image if empty
-    gpa: gpa ? parseFloat(gpa) : null,   // Use null if empty or invalid GPA
+    gpa: gpa && !isNaN(gpa) ? parseFloat(gpa) : null,        
     campusId: campusId || null,          // Use null if no campus is selected
   };
 

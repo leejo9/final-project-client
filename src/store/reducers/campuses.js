@@ -11,11 +11,12 @@ import * as at from "../actions/actionTypes";  // Import Action Types ("at" keyw
 // Reducer for campuses
 const allCampuses = (state = [], action) => {
   switch (action.type) {
-    case "FETCH_ALL_CAMPUSES":
+    case at.FETCH_ALL_CAMPUSES:
       return action.payload;
-    case "DELETE_CAMPUS":
+    case at.DELETE_CAMPUS:
+      console.log(`Removing campus with ID: ${action.payload}`);
       // Remove the deleted campus from the state
-      return state.filter((campus) => campus.id !== action.payload);
+      return state.filter(campus => campus.id!==action.payload);
     default:
       return state;
   }

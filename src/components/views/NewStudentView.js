@@ -7,7 +7,7 @@ It constructs a React component to display the new student page.
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 // Create styling for the input form
@@ -22,10 +22,6 @@ const useStyles = makeStyles(() => ({
     flexGrow: 1,
     textAlign: 'left',
     textDecoration: 'none',
-  },
-  customizeAppBar: {
-    backgroundColor: '#11153e',
-    shadows: ['none'],
   },
   formTitle: {
     backgroundColor: '#c5c8d6',
@@ -42,39 +38,31 @@ const useStyles = makeStyles(() => ({
 
 const NewStudentView = (props) => {
   const classes = useStyles();
-  const { handleSubmit, studData, campuses } = props; // campuses passed as prop
+  const { studData, campuses } = props; // campuses passed as prop
 
   const [studentData, setStudentData] = useState({
     firstname: studData?.firstname || '',
     lastname: studData?.lastname || '',
     email: studData?.email || '',
-    imageUrl: studData?.imageUrl || '',
-    gpa: studData?.gpa || '',
+    imageUrl: studData?.imageUrl,
+    gpa: studData?.gpa,
     campusId: studData?.campusId || '',
   });
 
-  const [errors, setErrors] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    imageUrl: '',
-    gpa: '',
-  });
-
-   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Validation function
   const validate = () => {
     let formErrors = {};
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-    const gpaRegex = /^[0-4](?:\.\d{1,2})?$/;
+    const gpaRegex = /^[0-4](\.\d{1,2})?$/;
 
     // Validate first name
-    if (!studentData.firstname) formErrors.firstname = 'First name is required';
+    if (!studentData.firstname.trim()) formErrors.firstname = 'First name is required';
 
     // Validate last name
-    if (!studentData.lastname) formErrors.lastname = 'Last name is required';
+    if (!studentData.lastname.trim()) formErrors.lastname = 'Last name is required';
 
     // Validate email
     if (!studentData.email || !emailRegex.test(studentData.email)) {
@@ -83,10 +71,10 @@ const NewStudentView = (props) => {
 
     // Validate image URL (basic validation)
     if (studentData.imageUrl && !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/.test(studentData.imageUrl)) {
-      formErrors.imageUrl = 'Invalid image URL (must be a valid URL ending in .jpg, .jpeg, .png, or .gif)';
+      formErrors.imageUrl = 'Invalid image URL (must end in .jpg, .jpeg, .png, or .gif)';
     }
 
-    // Validate GPA (must be a number between 0 and 4)
+    // Validate GPA (must be a number between 0 and 4 if provided)
     if (studentData.gpa && !gpaRegex.test(studentData.gpa)) {
       formErrors.gpa = 'GPA must be a number between 0 and 4';
     }
@@ -104,38 +92,27 @@ const NewStudentView = (props) => {
     });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     if (validate()) {
       setIsSubmitting(true);
-      // If the form is valid, submit data without awaiting the response
-      if (studData) {
-        // If editing an existing student, make PUT request to update
-        axios.put(`/api/students/${studData.id}`, studentData)
-          .then((response) => {
-            console.log('Student updated:', response.data);
-            setIsSubmitting(false);
-            // Optionally reset form or navigate
-          })
-          .catch((error) => {
-            console.error('Error updating student:', error);
-            setIsSubmitting(false);
-            // Handle error state
-          });
-      } else {
-        // If adding a new student, make POST request to create
-        axios.post('/api/students', studentData)
-          .then((response) => {
-            console.log('New student added:', response.data);
-            setIsSubmitting(false);
-            // Optionally reset form or navigate
-          })
-          .catch((error) => {
-            console.error('Error adding new student:', error);
-            setIsSubmitting(false);
-            // Handle error state
-          });
+      try {
+        if (studData) {
+          // Update existing student
+          const response = await axios.put(`/api/students/${studData.id}`, studentData);
+          console.log('Student updated:', response.data);
+        } else {
+          // Create new student
+          const response = await axios.post('/api/students', studentData);
+          console.log('New student added:', response.data);
+        }
+        // Optionally reset form or navigate after submission
+      } catch (error) {
+        console.error('Error submitting form:', error.response?.data || error.message);
+        alert('Error adding/updating student: ' + (error.response?.data.message || error.message));
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -165,7 +142,6 @@ const NewStudentView = (props) => {
               name="firstname"
               value={studentData.firstname}
               onChange={handleChange}
-              required
             />
             <div className={classes.errorText}>{errors.firstname}</div>
             <br />
@@ -177,7 +153,6 @@ const NewStudentView = (props) => {
               name="lastname"
               value={studentData.lastname}
               onChange={handleChange}
-              required
             />
             <div className={classes.errorText}>{errors.lastname}</div>
             <br />
@@ -189,7 +164,6 @@ const NewStudentView = (props) => {
               name="email"
               value={studentData.email}
               onChange={handleChange}
-              required
             />
             <div className={classes.errorText}>{errors.email}</div>
             <br />

@@ -26,13 +26,13 @@ const useStyles = makeStyles(() => ({
 
 const NewCampusView = (props) => {
   const classes = useStyles();
-  const { handleSubmit, campusData, campuses } = props;
+  const { campusData } = props;
 
   const [formData, setFormData] = useState({
     name: campusData?.name || '',
     address: campusData?.address || '',
-    description: campusData?.description || '',
-    imageUrl: campusData?.imageUrl || '',
+    description: campusData?.description,
+    imageUrl: campusData?.imageUrl,
   });
 
   const [errors, setErrors] = useState({
