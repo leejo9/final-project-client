@@ -62,7 +62,6 @@ class NewCampusContainer extends Component {
   }
 
   render() {
-    console.log('lol')
     if (this.state.redirect) {
       
       this.props.history.push('/campuses');
