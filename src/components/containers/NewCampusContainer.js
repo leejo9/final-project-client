@@ -8,7 +8,6 @@ If needed, it also defines the component's "connect" function.
 import Header from './Header';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import NewCampusView from '../views/NewCampusView';
 import { addCampusThunk } from '../../store/thunks';
@@ -39,15 +38,15 @@ class NewCampusContainer extends Component {
     const { name, address, description, imageUrl } = this.state;
 
     // Validate required fields
-    if (!name || !address || !description) {
-      alert("Name, address, and description are required fields.");
+    if (!name || !address) {
+      alert("Name and address are required fields.");
       return;
     }
 
     const campus = {
       name,
       address,
-      description,
+      description: description || "",
       imageUrl: imageUrl || "https://example.com/profile.jpg", // Set default image if no image URL is provided
     };
 
@@ -63,8 +62,10 @@ class NewCampusContainer extends Component {
   }
 
   render() {
+    console.log('lol')
     if (this.state.redirect) {
-      return (<Redirect to={`/campus/${this.state.redirectId}`} />);
+      
+      this.props.history.push('/campuses');
     }
 
     return (

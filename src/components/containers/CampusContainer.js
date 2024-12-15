@@ -8,7 +8,7 @@ If needed, it also defines the component's "connect" function.
 import Header from './Header';
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchCampusThunk, deleteCampusThunk, editCampusThunk } from "../../store/thunks";
+import { fetchCampusThunk, deleteCampusThunk } from "../../store/thunks";
 
 import { CampusView } from "../views";
 
@@ -21,9 +21,13 @@ class CampusContainer extends Component {
 
   handleDeleteCampus = () => {
     const { campus, deleteCampus } = this.props;
+    console.log(`deleting campus with ID: ${campus.id}`);
     if (campus && campus.id) {
-      deleteCampus(campus.id);  // Ensure campus.id is passed correctly here
+      console.log(`Deleting campus with ID: ${campus.id}`);
+      deleteCampus(campus.id);
       this.props.history.push('/campuses');  // Redirect after deletion
+    } else {
+      console.error("Campus ID is not available for deletion.");
     }
   };
 
